@@ -1,28 +1,24 @@
 
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react'; 
+import axios from 'axios'; // Need to install npm axios
 import './App.css'; // Import the CSS file
 
 const InterviewComponent = () => {
-  // const [jobTitle, setJobTitle] = useState('');
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState('');
   const [role, setRole] = useState('');
 
-
-
   const handleUserResponseChange = (e) => {
-    setUserResponse(e.target.value);
+    setUserResponse(e.target.value); // get the value of response from the interview
   };
 
   const handleRoleChange = (e) => {
-    setRole(e.target.value);
+    setRole(e.target.value); // get the value of input job title
   };
-
+// the button used to submit answer
   const handleSubmit = async () => {
     try {
       const payload = {
-        // jobTitle,
         userResponse,
         conversation: [
           ...conversation,
@@ -36,13 +32,13 @@ const InterviewComponent = () => {
       const response = await axios.post('/api/interview', payload);
 
       const aiResponse = response.data.aiResponse;
-
+// setup of conversation in the text area
       setConversation([
         ...conversation,
         { role: "user", parts: [{ text: userResponse }] },
         { role: "model", parts: [{ text: aiResponse }] },
       ]);
-
+// setup of users response in the text area
       setUserResponse('');
     } catch (error) {
       if (error.response) {
@@ -61,14 +57,6 @@ const InterviewComponent = () => {
   return (
     <div className="container">
        <h1>AI Mock Interviewer</h1>
-      {/* <div>
-        <label>Job Title:</label>
-        <input
-          type="text"
-          value={jobTitle}
-          onChange={handleJobTitleChange}
-        />
-      </div> */}
       <div>
         <label>Job Title:</label>
         <input
@@ -77,13 +65,15 @@ const InterviewComponent = () => {
           onChange={handleRoleChange}
         />
       </div>
+      {/* this is where the response of AI and User will show */}
       <div style={{ border: '1px solid black', padding: '10px', margin: '10px 0', height: '300px', overflowY: 'scroll' }}>
         {conversation.map((entry, index) => (
           <div key={index}>
-            <strong>{ entry.role === 'user' ? 'You' : 'AI'}:</strong> {entry.parts.map(part => part.text).join(' ')}
+            <strong> {entry.role === 'user' ? 'You' : 'AI'}:</strong> {entry.parts.map(part => part.text).join(' ')}
           </div>
         ))}
       </div>
+      {/* this is where the user will type in answer */}
       <div>
         <textarea
           value={userResponse}
@@ -91,6 +81,7 @@ const InterviewComponent = () => {
           placeholder="Type your response here..."
         />
       </div>
+      {/* this is the button to sumbit the answer */}
       <button onClick={handleSubmit}>Submit</button>
     </div>
   );
