@@ -1,8 +1,8 @@
-module.exports = {
-    transform: {
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    moduleFileExtensions: ["js", "jsx"],
-    testEnvironment: "node"
-  };
-  
+const config = {
+  transform: {
+    "^.+\\.jsx?$": "babel-jest"
+  },
+  testEnvironment: "node"
+};
+
+export default config;
