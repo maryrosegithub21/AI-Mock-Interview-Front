@@ -1,5 +1,5 @@
 import React from 'react';
-import InterviewComponent from './InterviewComponent';
+import InterviewComponent from './InterviewComponent.mjs';
 import './App.css';
 
 function App() {
