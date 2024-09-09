@@ -1,10 +1,12 @@
 import React, { useState } from 'react'; 
 import axios from 'axios'; // Need to install npm axios
 // const axios = require('./axios.js');
+import.meta.env
 
 import './App.css'; // Import the CSS file
 
 const InterviewComponent = () => {
+  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState('');
   const [role, setRole] = useState('');
