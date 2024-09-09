@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react'; 
-// import axios from 'axios'; // Need to install npm axios
-const axios = require('./lib/axios.js');
+import axios from 'axios'; // Need to install npm axios
+// const axios = require('./axios.js');
 
 import './App.css'; // Import the CSS file
 
