@@ -99,7 +99,7 @@ import axios from 'axios'; // Ensure axios is installed via npm
 import './App.css'; // Import the CSS file
 
 const InterviewComponent = () => {
-  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
+  // const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState('');
   const [role, setRole] = useState('');
