@@ -1,13 +1,75 @@
-body {
+body, html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.background {
+  position: fixed; /* Fix the background to the viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../public/Cool-Robot-Wallpaper.jpg'); /* Correct path from the public directory */
+  background-size: cover;
+  background-position: center;
+  /* z-index: -1; Ensure the background is behind other content */
+}
+
+.main-container {
+  position: absolute; /* Position the container absolutely */
+  top: 0; /* Align to the top */
+  width: 40%; /* Adjust width as needed */
+  height: 100%; /* Adjust height as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align items to the top */
+  align-items: flex-start; /* Align items to the left */
+  padding: 60px; /* Add padding for spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+  background-color: rgba(1, 28, 49, 0.8); /* Optional: Add a semi-transparent background */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align items to the top */
+  align-items: stretch; /* Stretch items to fill the container width */
+  width: 10%; /* Make the container take full width */
+  padding: 20px; /* Add padding for spacing */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+  }
+
+h1 {
+  font-size: 2em; /* Adjust font size as needed */
+  margin: 0 0 10px 0; /* Add margin for spacing */
+  width: 100%; /* Make the h1 take full width */
+  text-align: left; /* Align text to the left */
+}
+
+label {
+  font-size: 1em; /* Adjust font size as needed */
+  margin-bottom: 5px; /* Add margin for spacing */
+  width: 100%; /* Make the label take full width */
+  text-align: left; /* Align text to the left */
+}
+
+input, button, textarea {
+  width: 100%; /* Make input, button, and textarea take full width */
+  padding: 10px; /* Add padding for better usability */
+  margin-bottom: 10px; /* Add margin for spacing */
+  box-sizing: border-box; /* Include padding in the element's total width and height */
+}
+
+textarea {
+  height: 100px; /* Set a default height for the textarea */
+  resize: vertical; /* Allow vertical resizing */
+}
+
+/* Optional: Media queries for different screen sizes */
+@media (max-width: 768px) {
+  .main-container {
+    width: 50%; /* Adjust width for smaller screens */
+  }
 }

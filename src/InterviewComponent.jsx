@@ -57,7 +57,15 @@ const InterviewComponent = () => {
     }
   };
 
+  const handleClear = () => {
+    setConversation([]); // Clear the conversation history
+    setUserResponse(''); // Clear the user response input
+    setRole(''); // Clear the role input
+  };
+
   return (
+    <div className="background">
+    <div className="main-container">
     <div className="container">
        <h1>AI Mock Interviewer</h1>
       <div>
@@ -69,7 +77,7 @@ const InterviewComponent = () => {
         />
       </div>
       {/* this is where the response of AI and User will show */}
-      <div style={{ border: '1px solid black', padding: '10px', margin: '10px 0', height: '300px', overflowY: 'scroll' }}>
+      <div >
         {conversation.map((entry, index) => (
           <div key={index}>
             <strong> {entry.role === 'user' ? 'You' : 'AI'}:</strong> {entry.parts.map(part => part.text).join(' ')}
@@ -86,7 +94,10 @@ const InterviewComponent = () => {
       </div>
       {/* this is the button to sumbit the answer */}
       <button onClick={handleSubmit}>Submit</button>
+      <button onClick={handleClear}>Clear</button>
     </div>
+    </div>
+   </div>
   );
 };
 
