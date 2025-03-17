@@ -1,3 +1,5 @@
+
+
 body, html {
   margin: 0;
   padding: 0;
@@ -14,8 +16,8 @@ body, html {
   background-image: url('../public/Cool-Robot-Wallpaper.jpg'); /* Correct path from the public directory */
   background-size: cover;
   background-position: center;
-  /* z-index: -1; Ensure the background is behind other content */
 }
+
 
 .main-container {
   position: absolute; /* Position the container absolutely */
@@ -26,50 +28,98 @@ body, html {
   flex-direction: column;
   justify-content: flex-start; /* Align items to the top */
   align-items: flex-start; /* Align items to the left */
-  padding: 60px; /* Add padding for spacing */
+  padding:40px; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
   background-color: rgba(1, 28, 49, 0.8); /* Optional: Add a semi-transparent background */
+  overflow-y: auto; /* Add vertical scroll bar */
+  padding-bottom: 40px;
 }
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Align items to the top */
-  align-items: stretch; /* Stretch items to fill the container width */
-  width: 10%; /* Make the container take full width */
-  padding: 20px; /* Add padding for spacing */
-  box-sizing: border-box; /* Include padding in the element's total width and height */
-  }
-
 h1 {
-  font-size: 2em; /* Adjust font size as needed */
-  margin: 0 0 10px 0; /* Add margin for spacing */
-  width: 100%; /* Make the h1 take full width */
-  text-align: left; /* Align text to the left */
+font-size: 2em; /* Adjust font size as needed */
+margin: 0 0 10px 0; /* Add margin for spacing */
+width: 100%; /* Make the h1 take full width */
+text-align: left; /* Align text to the left */
 }
 
 label {
-  font-size: 1em; /* Adjust font size as needed */
-  margin-bottom: 5px; /* Add margin for spacing */
-  width: 100%; /* Make the label take full width */
-  text-align: left; /* Align text to the left */
+font-size: 1em; /* Adjust font size as needed */
+margin-bottom: 5px; /* Add margin for spacing */
+width: 100%; /* Make the label take full width */
+text-align: left; /* Align text to the left */
 }
 
-input, button, textarea {
-  width: 100%; /* Make input, button, and textarea take full width */
-  padding: 10px; /* Add padding for better usability */
-  margin-bottom: 10px; /* Add margin for spacing */
-  box-sizing: border-box; /* Include padding in the element's total width and height */
+label, input, button, textarea {
+  font-size: 1em; /* Adjust font size for smaller screens */
+  width:100%; /* Make input, button, and textarea take full width */
+padding: 10px; /* Add padding for better usability */
+margin-bottom: 10px; /* Add margin for spacing */
+box-sizing: border-box; /* Include padding in the element's total width and height */
+max-width: 620px;
 }
 
-textarea {
-  height: 100px; /* Set a default height for the textarea */
-  resize: vertical; /* Allow vertical resizing */
+
+
+
+
+/* Media queries for different screen sizes */
+@media (max-width: 1024px) {
+  .main-container {
+    width: 60%; /* Adjust width for medium screens */
+    padding: 40px; /* Adjust padding for medium screens */
+  }
+    
+ 
+
+  h1 {
+    font-size: 1.5em; /* Adjust font size for smaller screens */
+  }
+
+  label, input, button, textarea {
+    font-size: 0.9em; /* Adjust font size for smaller screens */
+    width: 100%; /* Make input, button, and textarea take full width */
+    padding: 10px; /* Add padding for better usability */
+    margin-bottom: 10px; /* Add margin for spacing */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+  }
 }
 
-/* Optional: Media queries for different screen sizes */
 @media (max-width: 768px) {
   .main-container {
-    width: 50%; /* Adjust width for smaller screens */
+    width: 80%; /* Adjust width for smaller screens */
+    padding: 30px; /* Adjust padding for smaller screens */
+  }
+
+  
+  
+
+  h1 {
+    font-size: 1.5em; /* Adjust font size for smaller screens */
+  }
+
+  label, input, button, textarea {
+    font-size: 0.9em; /* Adjust font size for smaller screens */
+    width: 100%; /* Make input, button, and textarea take full width */
+padding: 10px; /* Add padding for better usability */
+margin-bottom: 10px; /* Add margin for spacing */
+box-sizing: border-box; /* Include padding in the element's total width and height */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-container {
+    width: 90%; /* Further adjust width for very small screens */
+    padding: 20px; /* Further adjust padding for very small screens */
+  }
+  
+  h1 {
+    font-size: 1.2em; /* Further adjust font size for very small screens */
+  }
+
+  label, input, button, textarea {
+    font-size: 0.8em; /* Further adjust font size for very small screens */
+    width: 100%; /* Make input, button, and textarea take full width */
+padding: 10px; /* Add padding for better usability */
+margin-bottom: 10px; /* Add margin for spacing */
+box-sizing: border-box; /* Include padding in the element's total width and height */
   }
 }
