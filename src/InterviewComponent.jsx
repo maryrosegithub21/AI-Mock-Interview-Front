@@ -29,6 +29,13 @@ const InterviewComponent = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (userResponse) {
+      console.log('User Response before submit:', userResponse); // Debugging line
+      handleSubmit();
+    }
+  }, [userResponse]);
+
   const handleUserResponseChange = (e) => {
     setUserResponse(e.target.value); // get the value of response from the interview
   };
@@ -51,6 +58,7 @@ const InterviewComponent = () => {
       console.log('Submitting payload:', payload); // Log the payload for debugging
 
       const response = await axios.post('/api/interview', payload);
+      // const response = await axios.post('https://interviewpracticeapp-444223.uc.r.appspot.com/api/interview', payload);
 
       const aiResponse = response.data.aiResponse;
 // setup of conversation in the text area
@@ -117,10 +125,17 @@ const InterviewComponent = () => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
+      console.log('Transcript:', transcript); // Debugging line
       setUserResponse(transcript);
       setIsListening(false);
-       handleSubmit(); // Automatically submit after voice input
-    };
+      // Use a callback to ensure the state update completes before submission
+    setUserResponse(transcript, () => {
+      console.log('User Response before submit:', transcript); // Debugging line
+      handleSubmit();
+    });
+
+    setIsListening(false);
+  };
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error:', event.error);

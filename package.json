@@ -1,7 +1,6 @@
 {
   "name": "mock-interview-frontend",
   "version": "0.1.0",
- 
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.14.5",
@@ -40,11 +39,11 @@
   },
   "proxy": "http://localhost:3002",
   "devDependencies": {
+    "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.25.4",
     "@babel/preset-react": "^7.24.7",
     "babel-jest": "^29.7.0",
     "jest": "^27.5.1",
-    "react-test-renderer": "^18.3.1",
-    "@babel/core": "^7.14.6"
+    "react-test-renderer": "^18.3.1"
   }
 }
