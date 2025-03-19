@@ -1,28 +1,24 @@
-import React, { useState, useEffect } from 'react'; 
-import axios from 'axios'; // Need to install npm axios
-// const axios = require('./axios.js');
-// import.meta.env
-
-import './App.css'; // Import the CSS file
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './App.css';
 
 const InterviewComponent = () => {
-  // const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const [conversation, setConversation] = useState([]);
   const [userResponse, setUserResponse] = useState('');
   const [role, setRole] = useState('');
   const [voices, setVoices] = useState([]);
   const [isListening, setIsListening] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [initialPromptSent, setInitialPromptSent] = useState(false);
+  const [roleFilled, setRoleFilled] = useState(false);
 
   useEffect(() => {
-    // Load available voices
     const loadVoices = () => {
       const synth = window.speechSynthesis;
       const availableVoices = synth.getVoices();
       setVoices(availableVoices);
     };
 
-    // Load voices initially and when they change
     loadVoices();
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       window.speechSynthesis.onvoiceschanged = loadVoices;
@@ -30,20 +26,54 @@ const InterviewComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (userResponse) {
-      console.log('User Response before submit:', userResponse); // Debugging line
-      handleSubmit();
+    if (roleFilled && !initialPromptSent) {
+      sendInitialPrompt(role);
+      setInitialPromptSent(true);
     }
-  }, [userResponse]);
+  }, [roleFilled, initialPromptSent, role]);
 
   const handleUserResponseChange = (e) => {
-    setUserResponse(e.target.value); // get the value of response from the interview
+    setUserResponse(e.target.value);
   };
 
   const handleRoleChange = (e) => {
-    setRole(e.target.value); // get the value of input job title
+    setRole(e.target.value);
   };
-// the button used to submit answer
+
+  const handleRoleBlur = () => {
+    setRoleFilled(true);
+  };
+
+  const sendInitialPrompt = async (role) => {
+    try {
+      const initialPrompt = `You are interviewing for the role of ${role}. I am the interviewer. Please introduce yourself and set the stage for the interview.`;
+
+      const payload = {
+        userResponse: initialPrompt,
+        conversation: [], // Initial conversation is empty
+        role: role,
+      };
+
+      console.log('Submitting initial prompt:', payload);
+
+      const response = await axios.post('/api/interview', payload);
+      const aiResponse = response.data.aiResponse;
+
+      // Add ONLY the AI's response to the conversation
+      setConversation([
+        { role: "model", parts: [{ text: aiResponse }] },
+      ]);
+      speakText(aiResponse);
+    } catch (error) {
+      console.error('Error sending initial prompt:', error);
+      if (error.response && error.response.status === 400) {
+        alert(error.response.data.error);
+      } else {
+        alert("An error occurred. Please try again.");
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       const payload = {
@@ -55,47 +85,41 @@ const InterviewComponent = () => {
         role,
       };
 
-      console.log('Submitting payload:', payload); // Log the payload for debugging
+      console.log('Submitting payload:', payload);
 
       const response = await axios.post('/api/interview', payload);
-      // const response = await axios.post('https://interviewpracticeapp-444223.uc.r.appspot.com/api/interview', payload);
-
       const aiResponse = response.data.aiResponse;
-// setup of conversation in the text area
+
+      // Add the user's response and the AI's response to the conversation
       setConversation([
         ...conversation,
         { role: "user", parts: [{ text: userResponse }] },
         { role: "model", parts: [{ text: aiResponse }] },
       ]);
-// setup of users response in the text area
       setUserResponse('');
       speakText(aiResponse);
     } catch (error) {
-      if (error.response) {
-        // Server responded with a status other than 200 range
-        console.error('Error response from server:', error.response.data);
-      } else if (error.request) {
-        // Request was made but no response received
-        console.error('No response received:', error.request);
+      console.error('Error submitting:', error);
+      if (error.response && error.response.status === 400) {
+        alert(error.response.data.error);
       } else {
-        // Something else caused the error
-        console.error('Error setting up request:', error.message);
+        alert("An error occurred. Please try again.");
       }
     }
   };
 
   const handleClear = () => {
-    setConversation([]); // Clear the conversation history
-    setUserResponse(''); // Clear the user response input
-    setRole(''); // Clear the role input
-    setFeedback(null); // Clear feedback
+    setConversation([]);
+    setUserResponse('');
+    setRole('');
+    setFeedback(null);
+    setInitialPromptSent(false);
+    setRoleFilled(false);
   };
 
-    // Function to convert text to speech
   const speakText = (text) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
-      // Select a female voice
       const femaleVoice = voices.find(voice => voice.name.includes('Female') || voice.name.includes('female') || voice.name.includes('Google UK English Female'));
       if (femaleVoice) {
         utterance.voice = femaleVoice;
@@ -106,9 +130,7 @@ const InterviewComponent = () => {
     }
   };
 
-
-   // Function to handle voice input
-   const handleVoiceInput = () => {
+  const handleVoiceInput = () => {
     if (!('webkitSpeechRecognition' in window)) {
       alert('Speech recognition is not supported in this browser.');
       return;
@@ -125,17 +147,11 @@ const InterviewComponent = () => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      console.log('Transcript:', transcript); // Debugging line
+      console.log('Transcript:', transcript);
       setUserResponse(transcript);
       setIsListening(false);
-      // Use a callback to ensure the state update completes before submission
-    setUserResponse(transcript, () => {
-      console.log('User Response before submit:', transcript); // Debugging line
-      handleSubmit();
-    });
-
-    setIsListening(false);
-  };
+      handleSubmit(); // Submit directly after voice input
+    };
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
@@ -149,7 +165,6 @@ const InterviewComponent = () => {
     recognition.start();
   };
 
-   // Function to calculate feedback
   const calculateFeedback = () => {
     const keywords = ['teamwork', 'leadership', 'problem-solving', 'communication', 'initiative'];
     const userResponses = conversation.filter(entry => entry.role === 'user').map(entry => entry.parts.map(part => part.text).join(' ')).join(' ');
@@ -158,55 +173,58 @@ const InterviewComponent = () => {
     setFeedback(score);
   };
 
-  // Function to render star rating based on feedback score
   const renderStarRating = () => {
     if (feedback === null) return null;
-    const fullStars = Math.floor(feedback / 20); // Assuming 5-star system
+    const fullStars = Math.floor(feedback / 20);
     const stars = Array(5).fill('☆').map((star, index) => index < fullStars ? '★' : star);
     return <div className="star-rating">{stars.join(' ')}</div>;
   };
 
   return (
     <div className="background">
-    <div className="main-container">
-    {renderStarRating()} {/* Render star rating at the top */}
-       <h1>AI Job Interview Practice</h1>
-      <div>
-        <label>Job Title:</label>
-        <input
-          type="text"
-          value={role}
-          onChange={handleRoleChange}
-        />
+      <div className="main-container">
+        {renderStarRating()}
+        <h1>AI Job Interview Practice</h1>
+        <div>
+          <label>Job Title:</label>
+          <input
+            type="text"
+            value={role}
+            onChange={handleRoleChange}
+            onBlur={handleRoleBlur}
+          />
+        </div>
+        <div>
+          {conversation.map((entry, index) => (
+            <div key={index}>
+              <strong>{entry.role === 'user' ? 'You' : 'AI'}:</strong> {entry.parts.map(part => part.text).join(' ')}
+            </div>
+          ))}
+        </div>
+        <div>
+          <textarea
+            value={userResponse}
+            onChange={handleUserResponseChange}
+            placeholder="Type your response here..."
+            onPaste={(e) => {
+              e.preventDefault();
+              alert("Copy-pasting is not allowed. Please type or use voice input.");
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              alert("Drag and drop is disabled. Please type or use voice input.");
+            }}
+          />
+        </div>
+        <button onClick={handleVoiceInput} disabled={isListening}>
+          {isListening ? 'Listening...' : 'Use Voice Input'}
+        </button>
+        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={handleClear}>Clear</button>
+        {renderStarRating()}
       </div>
-      {/* this is where the response of AI and User will show */}
-      <div >
-        {conversation.map((entry, index) => (
-          <div key={index}>
-            <strong> {entry.role === 'user' ? 'You' : 'AI'}:</strong> {entry.parts.map(part => part.text).join(' ')}
-          </div>
-        ))}
-      </div>
-      {/* this is where the user will type in answer */}
-      <div>
-        <textarea
-          value={userResponse}
-          onChange={handleUserResponseChange}
-          placeholder="Type your response here..."
-        />
-       
-      </div>
-      {/* this is the button to sumbit the answer */}
-      <button onClick={handleVoiceInput} disabled={isListening}>
-            {isListening ? 'Listening...' : 'Use Voice Input'}
-      </button>
-      <button onClick={handleSubmit}>Submit</button>
-      <button onClick={handleClear}>Clear</button>
-      {renderStarRating()}
-    </div>
     </div>
   );
 };
 
 export default InterviewComponent;
-
